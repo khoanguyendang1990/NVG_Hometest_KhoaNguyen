@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="false">
+	<listeners>
+		<listener class-name="commons.MethodListener" />
+	</listeners>
+	<test name="Test">
+		<parameter name="browserName" value="chrome" />
+		<classes>
+			<class name="nvg.anibis.hometest.NVG_HomeTest" />
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
