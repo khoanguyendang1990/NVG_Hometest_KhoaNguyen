@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>nvg.anibis.hometest</groupId>
-  <artifactId>nvg.anibis.hometest</artifactId>
+  <groupId>com.bankguru.payment</groupId>
+  <artifactId>com.bankguru.payment</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>MAVEN_NVG_ANIBIS_KHOANGUYEN</name>
+  <name>POM_BANKGURU_15_KHOAND</name>
   
   <!-- Khai báo biến -->
 	<properties>
@@ -121,7 +121,7 @@
 
 					<!-- Run TestNG xml file -->
 					<suiteXmlFiles>
-						<file>src/main/resources/HomeTest_NVG_testNG.xml</file>
+						<file>src/main/resources/BankGuru.xml</file>
 					</suiteXmlFiles>
 
 				</configuration>

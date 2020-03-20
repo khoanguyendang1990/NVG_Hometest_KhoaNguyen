@@ -1,5 +1,10 @@
 package commons;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -14,21 +19,25 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.testng.Assert;
 import org.testng.Reporter;
 
-public class AbstractTest {
+public class BaseTest {
 
 	private WebDriver driver;
 	String rootFolder = System.getProperty("user.dir");
 	protected final Log log;
 	
-	public AbstractTest() {
+	public BaseTest() {
 		log = LogFactory.getLog(getClass());
 	}
 
+	public WebDriver getDriver() {
+		return driver;
+	}
+	
 	protected synchronized WebDriver getBrowserDriver(String browserName) {
 		if (browserName.equalsIgnoreCase("firefox")) {
 			System.setProperty("webdriver.gecko.driver", rootFolder + "/src/test/resources/geckodriver.exe");
 			driver = new FirefoxDriver();
-		} else if (browserName.equalsIgnoreCase("chrome")) {
+		} else if (browserName.equalsIgnoreCase("chrome_ui")) {
 			System.setProperty("webdriver.chrome.driver", rootFolder + "/src/test/resources/chromedriver.exe");
 			driver = new ChromeDriver();
 		} else if (browserName.equalsIgnoreCase("ie")) {
@@ -155,5 +164,13 @@ public class AbstractTest {
 	public int randomNumber() {
 		Random random = new Random();
 		return random.nextInt(99999999);
+	}
+	
+	public String convertFormatDateTime(String dateTime,String inputFormat, String outputFormat) throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat(inputFormat);
+		Date date = formatter.parse(dateTime);
+		SimpleDateFormat formatter1 = new SimpleDateFormat(outputFormat);  
+	    String strDate = formatter1.format(date);  
+	    return strDate;
 	}
 }
