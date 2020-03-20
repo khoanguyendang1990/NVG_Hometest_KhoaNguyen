@@ -443,7 +443,13 @@ public class ReuseFunctions {
 	}
 
 	public void clickToElementByJS(String locator) {
-		element = driver.findElement(By.xpath(locator));
+		element = find(locator);
+		jsExecutor.executeScript("arguments[0].click();", element);
+	}
+	
+	public void clickToElementByJS(String locator,String... values) {
+		locator = castRestParameter(locator, values);
+		element = find(locator);
 		jsExecutor.executeScript("arguments[0].click();", element);
 	}
 
@@ -467,6 +473,11 @@ public class ReuseFunctions {
 		clickToElement(CommonPageUI.DYNAMIC_LINK, pageName);
 	}
 	
+	public void openMultiplePagesJS(String pageName) {
+		waitForElementVisible(CommonPageUI.DYNAMIC_LINK, pageName);
+		clickToElementByJS(CommonPageUI.DYNAMIC_LINK, pageName);
+	}
+	
 	public void inputToDynamicTextbox(String textboxName,String textValue) {
 		waitForElementVisible(CommonPageUI.DYNAMIC_TEXTBOX,textboxName);
 		sendKeyToElement(CommonPageUI.DYNAMIC_TEXTBOX,textValue, textboxName);
@@ -486,6 +497,8 @@ public class ReuseFunctions {
 		waitForElementVisible(CommonPageUI.DYNAMIC_RADIO_BUTTON,radioButtonName);
 		clickToElement(CommonPageUI.DYNAMIC_RADIO_BUTTON, radioButtonName);
 	}
+	
+	
 	
 	public String getTextDynamicTableRow(String rowName) {
 		waitForElementVisible(CommonPageUI.DYNAMIC_TABLE_ROWNAME,rowName);

@@ -2,12 +2,14 @@ package commons;
 
 import org.openqa.selenium.WebDriver;
 
+import pageObjects.DepositPO;
 import pageObjects.EditAccountPO;
 import pageObjects.EditCustomerPO;
 import pageObjects.HomePO;
 import pageObjects.LoginPO;
 import pageObjects.NewAccountPO;
 import pageObjects.NewCustomerPO;
+import pageObjects.WithdrawalPO;
 
 public class PageGeneratorManager {
 
@@ -33,5 +35,13 @@ public class PageGeneratorManager {
 	
 	public static EditAccountPO getEditAccountPage(WebDriver driver) {
 		return new EditAccountPO(driver);
+	}
+	
+	public static DepositPO getDepositPage(WebDriver driver) {
+		return new DepositPO(driver);
+	}
+	
+	public static WithdrawalPO getWithdrawalPage(WebDriver driver) {
+		return new WithdrawalPO(driver);
 	}
 }
