@@ -82,7 +82,7 @@ public class ReuseFunctions {
 		waitExplicit.until(ExpectedConditions.alertIsPresent());
 	}
 
-	public String getTextAlert(String value) {
+	public String getTextAlert() {
 		return driver.switchTo().alert().getText();
 	}
 

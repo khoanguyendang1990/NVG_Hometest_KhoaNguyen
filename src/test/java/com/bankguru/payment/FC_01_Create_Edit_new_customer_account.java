@@ -23,8 +23,13 @@ import commons.Constants;
 import commons.PageGeneratorManager;
 import driverFactory.DriverManager;
 import driverFactory.DriverManagerFactory;
+import pageObjects.BalanceEnquiryPO;
+import pageObjects.DeleteAccountPO;
+import pageObjects.DeleteCustomerPO;
 import pageObjects.DepositPO;
+import pageObjects.EditAccountPO;
 import pageObjects.EditCustomerPO;
+import pageObjects.FundTransferPO;
 import pageObjects.HomePO;
 import pageObjects.LoginPO;
 import pageObjects.NewAccountPO;
@@ -40,10 +45,15 @@ public class FC_01_Create_Edit_new_customer_account extends BaseTest {
 	private HomePO homePageObject;
 	private NewCustomerPO newCustomerPageObject;
 	private EditCustomerPO editCustomerPageObject;
+	private DeleteCustomerPO deleteCustomerPageObject;
 	private NewAccountPO newAccountPageObject;
+	private EditAccountPO editAccountPageObject;
+	private DeleteAccountPO deleteAccountPageObject;
 	private DepositPO depositPageObject;
 	private WithdrawalPO withdrawalPageObject;
-
+	private FundTransferPO fundTransferPageObject;
+	private BalanceEnquiryPO balanceEnquiryPageObject;
+	
 	private static int currentBalance;
 	// TC01
 	private String customerName = "Automation";
@@ -75,6 +85,11 @@ public class FC_01_Create_Edit_new_customer_account extends BaseTest {
 
 	// TC06
 	private int withdrawalAmount = 15000;
+	
+	//TC07
+	private int fundTransfer= 10000;
+	private String payeeAccount = "76454";
+	
 	private Log log = LogFactory.getLog(getClass());
 
 	@Test
@@ -159,6 +174,7 @@ public class FC_01_Create_Edit_new_customer_account extends BaseTest {
 		log.info("========End TC_01_Create_new_customer_account_and_check_created_successfully========");
 		ExtentTestManager.endTest();
 	}
+	
 
 	@Test(dependsOnMethods = "TC_01_Create_new_customer_account_and_check_created_successfully")
 	public void TC_02_Edit_customer_account_and_check_edited_successfully() {
@@ -248,7 +264,7 @@ public class FC_01_Create_Edit_new_customer_account extends BaseTest {
 
 		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 4: Fill in CustomerID, Account Type, Initial deposit fields");
 		log.info("Step 4: Fill in CustomerID, Account Type, Initial deposit fields");
-		newAccountPageObject.inputToDynamicTextbox("cusid", "16275");
+		newAccountPageObject.inputToDynamicTextbox("cusid", customerID);
 
 		log.info("Select Account Type");
 		newAccountPageObject.selectDynamicDropDownList("selaccount", "Savings");
@@ -286,32 +302,32 @@ public class FC_01_Create_Edit_new_customer_account extends BaseTest {
 		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 3: Open Edit Account Page");
 		log.info("Step 3: Open Edit Account Page");
 		homePageObject.openMultiplePages("Edit Account");
-		editCustomerPageObject = PageGeneratorManager.getEditCustomerPage(driver);
-		verifyEquals(editCustomerPageObject.getTextDynamicPageHeading("heading3"), "Edit Account Form");
+		editAccountPageObject = PageGeneratorManager.getEditAccountPage(driver);
+		verifyEquals(editAccountPageObject.getTextDynamicPageHeading("heading3"), "Edit Account Form");
 
 		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 4: Enter Account ID ");
 		log.info("Step 4: Enter Account ID");
-		editCustomerPageObject.inputToDynamicTextbox("accountno", accountID);
+		editAccountPageObject.inputToDynamicTextbox("accountno", accountID);
 
 		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 5: Click Submit button");
 		log.info("Step 5: Click Submit button");
-		editCustomerPageObject.clickToDynamicButton("AccSubmit");
+		editAccountPageObject.clickToDynamicButton("AccSubmit");
 
 		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 6: Change Type Account to Current");
 		log.info("Step 6: Change Type Account to Current");
-		editCustomerPageObject.selectDynamicDropDownList("a_type", "Current");
+		editAccountPageObject.selectDynamicDropDownList("a_type", "Current");
 
 		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 7: Click Submit button");
 		log.info("Step 7: Click Submit button");
-		editCustomerPageObject.clickToDynamicButton("AccSubmit");
+		editAccountPageObject.clickToDynamicButton("AccSubmit");
 
 		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 8: Verify Account details updated Successfully!!!");
 		log.info("Step 8: Verify Account details updated Successfully!!!");
-		verifyEquals(editCustomerPageObject.getTextDynamicPageHeading("heading3"), "Account details updated Successfully!!!");
+		verifyEquals(editAccountPageObject.getTextDynamicPageHeading("heading3"), "Account details updated Successfully!!!");
 
 		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 9: Verify Account Type = Current");
 		log.info("Step 9: Verify Account Type = Current");
-		verifyEquals(editCustomerPageObject.getTextDynamicTableRow("Account Type"), "Current");
+		verifyEquals(editAccountPageObject.getTextDynamicTableRow("Account Type"), "Current");
 
 		log.info("========End TC_04_Edit_account_anh_check_type_of_Account_is_Current========");
 		ExtentTestManager.endTest();
@@ -359,6 +375,7 @@ public class FC_01_Create_Edit_new_customer_account extends BaseTest {
 		log.info("========End TC_05_Transfer_Money_Into_Current_Account========");
 		ExtentTestManager.endTest();
 	}
+	
 
 	@Test(dependsOnMethods = "TC_05_Transfer_Money_Into_Current_Account")
 	public void TC_06_Withdraw_Money_From_Current_Account() {
@@ -402,6 +419,201 @@ public class FC_01_Create_Edit_new_customer_account extends BaseTest {
 		ExtentTestManager.endTest();
 	}
 
+	@Test(dependsOnMethods = "TC_06_Withdraw_Money_From_Current_Account")
+	public void TC_07_Transfer_Money_Into_Another_Account() {
+		ExtentTestManager.startTest("TC_07_Transfer_Money_Into_Another_Account", "Transfer the money into another account and check amount equal 10,000");
+		log.info("========Start TC_07_Transfer_Money_Into_Another_Account========");
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 3: Open Fund Transfer Page");
+		log.info("Step 3: Open Fund Transfer Page");
+		homePageObject.openMultiplePagesJS("Fund Transfer");
+		fundTransferPageObject = PageGeneratorManager.getFundTransferPage(driver);
+		verifyEquals(fundTransferPageObject.getTextDynamicPageHeading("heading3"), "Fund transfer");
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 4: Fill in Payers account no, Payeers account no, Amount, Description fields");
+		log.info("Step 4: Fill in Payers account no, Payeers account no, Amount, Description fields");
+
+		log.info("Input Payers Account ID");
+		fundTransferPageObject.inputToDynamicTextbox("payersaccount", accountID);
+		
+		log.info("Input Payees Account ID");
+		fundTransferPageObject.inputToDynamicTextbox("payeeaccount", payeeAccount);
+
+		log.info("Input Amount");
+		fundTransferPageObject.inputToDynamicTextbox("ammount", String.valueOf(fundTransfer));
+		
+		log.info("Input Description");
+		fundTransferPageObject.inputToDynamicTextbox("desc", "Fund Transfer");
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 5: Click Submit button");
+		log.info("Step 5: Click Submit button");
+		fundTransferPageObject.clickToDynamicButton("AccSubmit");
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Verify message displays with content Balance Details for Account " + accountID);
+		log.info("Verify message displays with content Balance Details for Account " + accountID);
+		
+		verifyEquals(fundTransferPageObject.getTextDynamicPageHeading("heading3"), "Fund Transfer Details");
+		
+		log.info("Verify From Account Number = " + accountID);
+		verifyEquals(fundTransferPageObject.getTextDynamicTableRow("From Account Number"), accountID);
+		
+		log.info("Verify Amount = " + String.valueOf(fundTransfer));
+		verifyEquals(fundTransferPageObject.getTextDynamicTableRow("Amount"), String.valueOf(fundTransfer));
+		
+		currentBalance = currentBalance - fundTransfer;
+		log.info("Get Current Balance after Fund Transfer Amount. Current Balance: " + currentBalance);
+		
+		log.info("========End TC_07_Transfer_Money_Into_Another_Account========");
+		ExtentTestManager.endTest();
+	}
+	
+	@Test(dependsOnMethods = "TC_07_Transfer_Money_Into_Another_Account")
+	public void TC_08_Check_Current_Account_Balance() {
+		ExtentTestManager.startTest("TC_08_Check_Current_Account_Balance", "Check current account balance equal 30,000");
+		log.info("========Start TC_08_Check_Current_Account_Balance========");
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 3: Open Balance Enquiry Page");
+		log.info("Step 3: Open Balance Enquiry Page");
+		homePageObject.openMultiplePagesJS("Balance Enquiry");
+		balanceEnquiryPageObject = PageGeneratorManager.getBalanceEnquiryPage(driver);
+		verifyEquals(balanceEnquiryPageObject.getTextDynamicPageHeading("heading3"), "Balance Enquiry Form");
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 4: Fill in Account ID fields");
+		log.info("Step 4: Fill in Account ID fields");
+
+		log.info("Input Account ID");
+		balanceEnquiryPageObject.inputToDynamicTextbox("accountno", accountID);
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 5: Click Submit button");
+		log.info("Step 5: Click Submit button");
+		balanceEnquiryPageObject.clickToDynamicButton("AccSubmit");
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Verify message displays with content Balance Details for Account " + accountID);
+		log.info("Verify message displays with content Balance Details for Account " + accountID);
+		verifyEquals(balanceEnquiryPageObject.getTextDynamicPageHeading("heading3"), "Balance Details for Account " + accountID);
+		
+		log.info("Verify Account ID = " + accountID);
+		verifyEquals(balanceEnquiryPageObject.getTextDynamicTableRow("Account No"), accountID);
+		
+		log.info("Verify Balance = " + String.valueOf(currentBalance));
+		verifyEquals(balanceEnquiryPageObject.getTextDynamicTableRow("Balance"), String.valueOf(currentBalance));
+		
+		log.info("========End TC_08_Check_Current_Account_Balance========");
+		ExtentTestManager.endTest();
+	}
+	
+	@Test(dependsOnMethods = "TC_08_Check_Current_Account_Balance")
+	public void TC_09_Delete_Account_Of_Customer_And_Check_Delete_Successfully() {
+//		accountID="76404";
+		ExtentTestManager.startTest("TC_09_Delete_Account_Of_Customer_And_Check_Delete_Successfully", "Delete all account of this customer account and check deleted successfully");
+		log.info("========Start TC_09_Delete_Account_Of_Customer_And_Check_Delete_Successfully========");
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 3: Open Delete Account Page");
+		log.info("Step 3: Open Delete Account Page");
+		homePageObject.openMultiplePages("Delete Account");
+		deleteAccountPageObject = PageGeneratorManager.getDeleteAccountPage(driver);
+		verifyEquals(deleteAccountPageObject.getTextDynamicPageHeading("heading3"), "Delete Account Form");
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 4: Fill in Account ID fields");
+		log.info("Step 4: Fill in Account ID fields");
+
+		log.info("Input Account ID");
+		deleteAccountPageObject.inputToDynamicTextbox("accountno", accountID);
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 5: Click Submit button");
+		log.info("Step 5: Click Submit button");
+		deleteAccountPageObject.clickToDynamicButton("AccSubmit");
+		
+		log.info("Verify Alert message show Do you really want to delete this Account?");
+		verifyEquals(deleteAccountPageObject.getTextAlert(), "Do you really want to delete this Account?");
+		
+		log.info("Accept Alert");
+		deleteAccountPageObject.acceptAlert();
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Verify Alert message show Account Deleted Successfully");
+		log.info("Verify Alert message show Account Deleted Successfully");
+		verifyEquals(deleteAccountPageObject.getTextAlert(), "Account Deleted Sucessfully");
+		deleteAccountPageObject.acceptAlert();
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 6: Open Edit Account Page");
+		log.info("Step 6: Open Edit Account Page");
+		deleteAccountPageObject.openMultiplePages("Edit Account");
+		editAccountPageObject = PageGeneratorManager.getEditAccountPage(driver);
+		verifyEquals(editAccountPageObject.getTextDynamicPageHeading("heading3"), "Edit Account Form");
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 7: Enter Account ID ");
+		log.info("Step 7: Enter Account ID");
+		editAccountPageObject.inputToDynamicTextbox("accountno", accountID);
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 8: Click Submit button");
+		log.info("Step 8: Click Submit button");
+		editAccountPageObject.clickToDynamicButton("AccSubmit");
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Verify Alert message show Account does not exist");
+		log.info("Verify Alert message show Account does not exist");
+		verifyEquals(editAccountPageObject.getTextAlert(), "Account does not exist");
+		editAccountPageObject.acceptAlert();
+		
+		log.info("========End TC_09_Delete_Account_Of_Customer_And_Check_Delete_Successfully========");
+		ExtentTestManager.endTest();
+	}
+	
+	@Test(dependsOnMethods = "TC_09_Delete_Account_Of_Customer_And_Check_Delete_Successfully")
+	public void TC_10_Delete_Existing_Customer_And_Check_Delete_Successfully() {
+//		customerID="66381";
+		ExtentTestManager.startTest("TC_10_Delete_Existing_Customer_And_Check_Delete_Successfully", "Delete exist customer account and check deleted successfully");
+		log.info("========Start TC_10_Delete_Existing_Customer_And_Check_Delete_Successfully========");
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 3: Open Delete Customer Page");
+		log.info("Step 3: Open Delete Customer Page");
+		homePageObject.openMultiplePages("Delete Customer");
+		deleteCustomerPageObject = PageGeneratorManager.getDeleteCustomerPage(driver);
+		verifyEquals(deleteCustomerPageObject.getTextDynamicPageHeading("heading3"), "Delete Customer Form");
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 4: Fill in Customer ID fields");
+		log.info("Step 4: Fill in Customer ID fields");
+
+		log.info("Input Customer ID");
+		deleteCustomerPageObject.inputToDynamicTextbox("cusid", customerID);
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 5: Click Submit button");
+		log.info("Step 5: Click Submit button");
+		deleteCustomerPageObject.clickToDynamicButton("AccSubmit");
+		
+		log.info("Verify Alert message show Do you really want to delete this Customer?");
+		verifyEquals(deleteCustomerPageObject.getTextAlert(), "Do you really want to delete this Customer?");
+		
+		log.info("Accept Alert");
+		deleteCustomerPageObject.acceptAlert();
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Verify Alert message show Customer deleted Successfully");
+		log.info("Verify Alert message show Customer deleted Successfully");
+		verifyEquals(deleteCustomerPageObject.getTextAlert(), "Customer deleted Successfully");
+		deleteCustomerPageObject.acceptAlert();
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 6: Open Edit Customer Page");
+		log.info("Step 6: Open Edit Customer Page");
+		deleteCustomerPageObject.openMultiplePages("Edit Customer");
+		editCustomerPageObject = PageGeneratorManager.getEditCustomerPage(driver);
+		verifyEquals(editCustomerPageObject.getTextDynamicPageHeading("heading3"), "Edit Customer Form");
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 7: Enter Customer ID ");
+		log.info("Step 7: Enter Customer ID");
+		editCustomerPageObject.inputToDynamicTextbox("cusid", customerID);
+
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Step 8: Click Submit button");
+		log.info("Step 8: Click Submit button");
+		editCustomerPageObject.clickToDynamicButton("AccSubmit");
+		
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Verify Alert message show Customer does not exist!!");
+		log.info("Verify Alert message show Customer does not exist!!");
+		verifyEquals(editCustomerPageObject.getTextAlert(), "Customer does not exist!!");
+		editCustomerPageObject.acceptAlert();
+		
+		log.info("========End TC_10_Delete_Existing_Customer_And_Check_Delete_Successfully========");
+		ExtentTestManager.endTest();
+	}
+	
 	@BeforeClass
 	@Parameters("browserName")
 	public void beforeClass(String browserName) {

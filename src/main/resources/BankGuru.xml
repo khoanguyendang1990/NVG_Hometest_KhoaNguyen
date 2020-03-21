@@ -13,12 +13,6 @@
 		<parameter name="browserName" value="chrome_ui" />
 		<classes>
 			<class name="com.bankguru.payment.FC_01_Create_Edit_new_customer_account">
-				<methods>
-					<include name="TC_03_Create_new_account_and_check_created_successfully" />
-					<include name="TC_04_Edit_account_anh_check_type_of_Account_is_Current" />
-					<include name="TC_05_Transfer_Money_Into_Current_Account" />
-					<include name="TC_06_Withdraw_Money_From_Current_Account" />
-				</methods>
 			</class>
 		</classes>
 	</test> <!-- Test -->
