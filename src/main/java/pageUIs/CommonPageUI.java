@@ -9,6 +9,7 @@ public class CommonPageUI {
 	public static final String DYNAMIC_TEXTBOX="//input[@name='%s']";
 	public static final String DYNAMIC_TEXTAREA="//textarea[@name='%s']";
 	public static final String DYNAMIC_BUTTON="//input[@name='%s']";
+	public static final String DYNAMIC_CHECKBOX="//input[@name='%s']";
 	public static final String DYNAMIC_RADIO_BUTTON="//input[@type='radio' and @value='%s']";
 	public static final String DYNAMIC_PAGE_HEADING="//p[@class='%s']";
 	public static final String DYNAMIC_TABLE_ROWNAME="//td[contains(text(),'%s')]/following-sibling::td";
